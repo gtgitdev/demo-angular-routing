@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Imports for loading & configuring the in-memory web api
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ProductData } from './products/product-data';
@@ -26,11 +26,14 @@ import { AppRoutingModule } from './app-routing.module';
     UserModule,
     MessageModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
+
   ],
   declarations: [
     AppComponent,
     WelcomeComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+
   ],
   bootstrap: [AppComponent]
 })
