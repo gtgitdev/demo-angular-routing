@@ -12,15 +12,27 @@ import { ProductService } from '../product.service';
 })
 export class ProductEditComponent implements OnInit {
 
+  private dataIsValid: { [key: string]: boolean };
+
   pageTitle = 'Product Edit';
   errorMessage: string;
 
   product: Product;
 
   constructor(private productService: ProductService,
-              private messageService: MessageService,
-              private route: ActivatedRoute,
-              private router: Router) { }
+    private messageService: MessageService,
+    private route: ActivatedRoute,
+    private router: Router) { }
+
+isValid(path?: string): boolean {
+  this.validate();
+  if (path) {
+    return this.dataIsValid[path];
+  }
+
+  return (this.dataIsValid &&
+    Object.keys(this.dataIsValid).every(d => this.dataIsValid[d] === true));
+}
 
   getProduct(id: number): void {
     this.productService.getProduct(id)
@@ -69,7 +81,7 @@ export class ProductEditComponent implements OnInit {
   }
 
   saveProduct(): void {
-    if (true === true) {
+    if (this.isValid()) {
       if (this.product.id === 0) {
         this.productService.createProduct(this.product)
           .subscribe(
@@ -96,4 +108,28 @@ export class ProductEditComponent implements OnInit {
 
     // Navigate back to the product list
   }
+
+  validate(): void {
+
+    this.dataIsValid = {};
+
+    // info tab
+    if (this.product.productName &&
+        this.product.productName.length >= 3 &&
+        this.product.productCode) {
+        this.dataIsValid['info'] = true;
+    } else {
+      this.dataIsValid['info'] = false;
+    }
+
+    // tags tab
+    if (this.product.category &&
+      this.product.category.length >= 3) {
+        this.dataIsValid['tags'] = true;
+      } else {
+        this.dataIsValid['tags'] = false;
+      }
+
+  }
+
 }
