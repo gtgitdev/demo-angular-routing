@@ -17,22 +17,43 @@ export class ProductEditComponent implements OnInit {
   pageTitle = 'Product Edit';
   errorMessage: string;
 
-  product: Product;
+  private currentProduct: Product;
+  private originalProduct: Product;
+
+  get product() {
+    return this.currentProduct;
+  }
+
+  set product(value: Product) {
+    this.currentProduct = value;
+    this.originalProduct = { ...value };
+  }
+
+  get isDirty() {
+    return JSON.stringify(this.originalProduct) !== JSON.stringify(this.currentProduct);
+  }
+
 
   constructor(private productService: ProductService,
     private messageService: MessageService,
     private route: ActivatedRoute,
     private router: Router) { }
 
-isValid(path?: string): boolean {
-  this.validate();
-  if (path) {
-    return this.dataIsValid[path];
+  reset() {
+    this.dataIsValid = null;
+    this.currentProduct = null;
+    this.originalProduct = null;
   }
 
-  return (this.dataIsValid &&
-    Object.keys(this.dataIsValid).every(d => this.dataIsValid[d] === true));
-}
+  isValid(path?: string): boolean {
+    this.validate();
+    if (path) {
+      return this.dataIsValid[path];
+    }
+
+    return (this.dataIsValid &&
+      Object.keys(this.dataIsValid).every(d => this.dataIsValid[d] === true));
+  }
 
   getProduct(id: number): void {
     this.productService.getProduct(id)
@@ -104,6 +125,7 @@ isValid(path?: string): boolean {
     if (message) {
       this.messageService.addMessage(message);
       this.router.navigate(['/products']);
+      this.reset();
     }
 
     // Navigate back to the product list
@@ -115,9 +137,9 @@ isValid(path?: string): boolean {
 
     // info tab
     if (this.product.productName &&
-        this.product.productName.length >= 3 &&
-        this.product.productCode) {
-        this.dataIsValid['info'] = true;
+      this.product.productName.length >= 3 &&
+      this.product.productCode) {
+      this.dataIsValid['info'] = true;
     } else {
       this.dataIsValid['info'] = false;
     }
@@ -125,10 +147,10 @@ isValid(path?: string): boolean {
     // tags tab
     if (this.product.category &&
       this.product.category.length >= 3) {
-        this.dataIsValid['tags'] = true;
-      } else {
-        this.dataIsValid['tags'] = false;
-      }
+      this.dataIsValid['tags'] = true;
+    } else {
+      this.dataIsValid['tags'] = false;
+    }
 
   }
 

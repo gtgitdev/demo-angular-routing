@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AuthGuard } from '../user/auth.guard';
 
 import { ProductListComponent } from './product-list.component';
 import { ProductDetailComponent } from './product-detail.component';
@@ -9,6 +10,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ProductResolverService } from './product-resolver.service';
 import { ProductEditInfoComponent } from './product-edit/product-edit-info.component';
 import { ProductEditTagsComponent } from './product-edit/product-edit-tags.component';
+import { ProductEditGuard } from './product-edit/product-edit.guard';
 
 @NgModule({
   imports: [
@@ -16,6 +18,7 @@ import { ProductEditTagsComponent } from './product-edit/product-edit-tags.compo
     RouterModule.forChild([
       {
         path: 'products', // componentless route will display in next available outlet
+        canActivate: [AuthGuard],
         children: [
           {
             path: '', component: ProductListComponent
@@ -29,6 +32,7 @@ import { ProductEditTagsComponent } from './product-edit/product-edit-tags.compo
             path: ':id/edit',
             component: ProductEditComponent,
             resolve: { resolvedData: ProductResolverService },
+            canDeactivate: [ProductEditGuard],
             children: [
               { path: '', redirectTo: 'info', pathMatch: 'full' },
               { path: 'info', component: ProductEditInfoComponent },
