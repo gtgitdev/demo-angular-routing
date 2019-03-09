@@ -16,10 +16,11 @@ import { ProductEditGuard } from './product-edit/product-edit.guard';
   imports: [
     SharedModule,
     RouterModule.forChild([
-      {
-        path: 'products', // componentless route will display in next available outlet
-        canActivate: [AuthGuard],
-        children: [
+      // {
+        // removed for Lasy loading
+        // path: 'products', // componentless route will display in next available outlet
+        // canActivate: [AuthGuard],
+        // children: [
           {
             path: '', component: ProductListComponent
           },
@@ -39,8 +40,8 @@ import { ProductEditGuard } from './product-edit/product-edit.guard';
               { path: 'tags', component: ProductEditTagsComponent },
             ]
           },
-        ]
-      },
+      //  ]
+      // },
 
     ]),
   ],
